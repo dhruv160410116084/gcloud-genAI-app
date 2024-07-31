@@ -9,9 +9,9 @@ steps:
     args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/genai/backend:$SHORT_SHA']
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set', 'image', 'deployment/frontend', 'frontend=us-central1-docker.pkg.dev/$PROJECT_ID/genai/frontend:$SHORT_SHA', '--namespace=default']
-    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=app']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1-a', 'CLOUDSDK_CONTAINER_CLUSTER=app']
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set', 'image', 'deployment/backend', 'backend=us-central1-docker.pkg.dev/$PROJECT_ID/genai/backend:$SHORT_SHA', '--namespace=default']
-    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=app']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1-a', 'CLOUDSDK_CONTAINER_CLUSTER=app']
 options:
   logging: CLOUD_LOGGING_ONLY
