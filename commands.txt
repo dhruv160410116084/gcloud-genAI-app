@@ -1,0 +1,19 @@
+ gcloud container clusters create  app --zone us-central1-a --num-nodes 2 --machine-type e2-medium --disk-size 10GB
+
+  kubectl create secret generic api-secret
+  --from-literal=API_KEY=AIzaSyDwq9tGsc8pc6buE5NNcGfW-DHz3qvmYw8
+ 
+ gcloud artifacts repositories create genai 
+    --project=winter-cab-388500 
+    --repository-format=docker 
+    --location=us-central1 
+    --description="genai repository"
+
+gcloud builds submit
+  --tag us-central1-docker.pkg.dev/winter-cab-388500/genai/backend ./backend
+
+gcloud builds submit
+  --tag us-central1-docker.pkg.dev/winter-cab-388500/genai/frontend ./frontend
+
+kubectl apply -f ./backend
+kubectl apply -f ./frontend

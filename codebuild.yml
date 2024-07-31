@@ -1,0 +1,17 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/genai/frontend:$SHORT_SHA', './frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/genai/backend:$SHORT_SHA', './backend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/genai/frontend:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/genai/backend:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deployment/frontend', 'frontend=us-central1-docker.pkg.dev/$PROJECT_ID/genai/frontend:$SHORT_SHA', '--namespace=default']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=cluster']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deployment/backend', 'backend=us-central1-docker.pkg.dev/$PROJECT_ID/genai/backend:$SHORT_SHA', '--namespace=default']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=cluster']
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Chat Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .chat-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            height: 300px;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .input-box {
+            display: flex;
+            align-items: center;
+        }
+        .input-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .input-box button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5107ff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .input-box button:hover {
+            background-color: #9e7ced;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> ChaiChat Application</h1>
+        <div class="chat-box" id="chat-box">
+           
+        </div>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Type a prompt here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (!userInput) return;
+
+           
+            const chatBox = document.getElementById('chat-box');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = 'You: ' + userInput;
+            chatBox.appendChild(userMessage);
+
+            
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: userInput }),
+            });
+
+            const result = await response.json();
+
+            
+            const aiMessage = document.createElement('div');
+            aiMessage.textContent = 'AI: ' + result.received_data;
+            chatBox.appendChild(aiMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
+</html>
